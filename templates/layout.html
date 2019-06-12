@@ -6,11 +6,11 @@
     </head>
     <body>
         <div class="container">
-            {% block body %}
-            {% endblock %}
-            <p align="right">
+          <p align="right">
               <a href="{{ url_for('logout') }}">Logout</a>
             </p>
+            {% block body %}
+            {% endblock %}
         </div>
     </body>
 </html>
