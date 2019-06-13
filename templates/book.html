@@ -6,8 +6,8 @@ block body %}
   <b>Title:</b> {{ book.title }}<br />
   <b>Author:</b> {{ book.author }}<br />
   <b>Year:</b> {{ book.year }}<br />
-  <b>ISBN:</b> {{ book.isbn }}<br />
-  <b>Goodreads Average Review:</b> {{ book_rating }}<br />
+  <b>ISBN:</b> <a href="https://www.amazon.com/s?k={{ book.isbn }}&ref=nb_sb_noss"> {{ book.isbn }} </a><br />
+  <b>Goodreads Average Review:</b> <a href="https://www.goodreads.com/book/show/{{ book.isbn }}">{{ book_rating }}</a><br />
   <div>
     <br />
     <div class="bg-light">

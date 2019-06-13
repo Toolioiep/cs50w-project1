@@ -22,12 +22,10 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 # Set up database
-engine = create_engine(os.getenv("DATABASE_URL"))
-# engine = create_engine(
-#     os.getenv(
-#         "postgres://eahwehioiwzgix:6cbc5e10d3106a72b1d996237366052807c67bd2ad77fbe5d6041a144e607e3a@ec2-54-228-207-163.eu-west-1.compute.amazonaws.com:5432/d1nkcldcl1832o"
-#     )
-# )
+# engine = create_engine(os.getenv("DATABASE_URL"))
+engine = create_engine(
+    "postgres://eahwehioiwzgix:6cbc5e10d3106a72b1d996237366052807c67bd2ad77fbe5d6041a144e607e3a@ec2-54-228-207-163.eu-west-1.compute.amazonaws.com:5432/d1nkcldcl1832o"
+)
 db = scoped_session(sessionmaker(bind=engine))
 
 
@@ -145,7 +143,9 @@ def book(book_id):
         {"id": book_id},
     ).fetchall()
 
-    return render_template("book.html", book=book, book_rating=book_rating, reviews=reviews)
+    return render_template(
+        "book.html", book=book, book_rating=book_rating, reviews=reviews
+    )
 
 
 @app.route("/review/<int:book_id>", methods=["POST"])
@@ -174,12 +174,14 @@ def review(book_id):
         )
         db.commit()
 
-        return redirect(url_for('book', book_id = book_id))
+        return redirect(url_for("book", book_id=book_id))
 
 
 @app.route("/api/<isbn_id>", methods=["GET"])
 def api(isbn_id):
-    book_api = db.execute("SELECT * FROM books WHERE isbn = :isbn", {"isbn" : isbn_id}).fetchone()
+    book_api = db.execute(
+        "SELECT * FROM books WHERE isbn = :isbn", {"isbn": isbn_id}
+    ).fetchone()
 
     if book_api is None:
         goodreads = get_goodreads(isbn_id)
@@ -189,19 +191,22 @@ def api(isbn_id):
             book_api = goodreads.json()
             return book_api
     else:
-        book_reviews = db.execute("SELECT COUNT(id), AVG(stars) FROM reviews WHERE book_id = :book_id", {"book_id" : book_api.id}).fetchone()
+        book_reviews = db.execute(
+            "SELECT COUNT(id), AVG(stars) FROM reviews WHERE book_id = :book_id",
+            {"book_id": book_api.id},
+        ).fetchone()
 
     resp = {}
-    resp['title'] = book_api.title
-    resp['author'] = book_api.author
-    resp['year'] = book_api.year
-    resp['isbn'] = book_api.isbn
+    resp["title"] = book_api.title
+    resp["author"] = book_api.author
+    resp["year"] = book_api.year
+    resp["isbn"] = book_api.isbn
     try:
-        resp['review_count'] = str(book_reviews[0])
-        resp['average_score'] = '% 1.1f' % book_reviews[1]
+        resp["review_count"] = str(book_reviews[0])
+        resp["average_score"] = "% 1.1f" % book_reviews[1]
     except TypeError:
-        resp['review_count'] = "Not enough reviews"
-        resp['average_score'] = "Not enough reviews"
+        resp["review_count"] = "Not enough reviews"
+        resp["average_score"] = "Not enough reviews"
 
     json_resp = json.dumps(resp)
 
