@@ -83,7 +83,9 @@ def login():
             "SELECT * FROM users WHERE username = :username", {"username": username}
         ).fetchone()
 
-        if result == None or not check_password_hash(result[1], password):
+        # pdb.set_trace()
+
+        if result == None or not check_password_hash(result[2], password):
             return render_template(
                 "error.html", message="invalid username and/or password"
             )

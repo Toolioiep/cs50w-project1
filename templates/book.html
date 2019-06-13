@@ -7,16 +7,17 @@ block body %}
   <b>Author:</b> {{ book.author }}<br />
   <b>Year:</b> {{ book.year }}<br />
   <b>ISBN:</b> <a href="https://www.amazon.com/s?k={{ book.isbn }}&ref=nb_sb_noss"> {{ book.isbn }} </a><br />
-  <b>Goodreads Average Review:</b> <a href="https://www.goodreads.com/book/show/{{ book.isbn }}">{{ book_rating }}</a><br />
+  <b>Goodreads Average Review:</b> <a href="https://www.goodreads.com/search?q={{ book.isbn }}">{{ book_rating }}</a><br />
   <div>
     <br />
     <div class="bg-light">
       {% if reviews %}
       {% for reviews in reviews %}
-      <b>{{ reviews.username }}</b> gave <b>{{ reviews.stars }}</b> and said:
-      <br />
-      {{ reviews.review }}
-      {% endfor %} {% else %}
+      <div class="mb-1">
+        <b>{{ reviews.username }}</b> gave <b>{{ reviews.stars }}</b> and said: {{ reviews.review }}
+      </div>
+      {% endfor %} 
+      {% else %}
       <p>No one has left a review yet.</p>
     {% endif %}
     </div>
